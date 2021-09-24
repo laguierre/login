@@ -155,7 +155,7 @@ class LoginPage extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple),
         //shape: MaterialStateProperty.
       ),
-      onPressed: () {},
+      onPressed: () { },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15.0),
         child:
