@@ -97,7 +97,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 30.0),
                 _pass(bloc),
                 SizedBox(height: 30.0),
-                _btn(),
+                _btn(bloc),
               ],
             ),
           ),
@@ -111,56 +111,77 @@ class LoginPage extends StatelessWidget {
   Widget _email(LoginBloc bloc) {
     return StreamBuilder(
         stream: bloc.emailStream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (context, AsyncSnapshot<String> snapshot) {
           return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                  icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
-                  hintText: 'example@email.com',
-                  labelText: 'Email',
-                  counterText: snapshot.data,
-                  errorText: snapshot.error.toString()),
-              onChanged: (value) => bloc.changeEmail,
-            ),
-          );
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
+                    hintText: 'example@email.com',
+                    labelText: 'Email',
+                    counterText: snapshot.data,
+                    errorText:
+                        snapshot.hasData ? null : snapshot.error.toString(),
+                  ),
+                  onChanged: (value) {
+                    bloc.changeEmail(value);
+                  }));
         });
   }
 
   Widget _pass(LoginBloc bloc) {
     return StreamBuilder(
         stream: bloc.passwordStream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (context, AsyncSnapshot<String> snapshot) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: TextField(
-              obscureText: true,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
-                labelText: 'Password',
-                counterText: snapshot.data,
-                errorText: snapshot.error.toString(),
-              ),
-              onChanged: (value) => bloc.passwordStream,
-            ),
+                obscureText: true,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
+                  labelText: 'Password',
+                  counterText: snapshot.data,
+                  errorText:
+                      snapshot.hasData ? null : snapshot.error.toString(),
+                ),
+                onChanged: (value) {
+                  bloc.changePassword(value);
+                }),
           );
         });
   }
 
-  Widget _btn() {
-    return ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple),
-        //shape: MaterialStateProperty.
-      ),
-      onPressed: () { },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15.0),
-        child:
-            Text('Login', style: TextStyle(color: Colors.white, fontSize: 18)),
-      ),
-    );
+  Widget _btn(LoginBloc bloc) {
+    return StreamBuilder(
+        stream: bloc.formValidStream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.deepPurple),
+              //shape: MaterialStateProperty.
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15.0),
+              child: Text('Login',
+                  style: TextStyle(color: Colors.white, fontSize: 18)),
+            ),
+            onPressed: snapshot.hasData
+                ? () {
+                    _login(bloc, context);
+                  }
+                : null,
+          );
+        });
+  }
+
+  _login(LoginBloc bloc, BuildContext context) {
+    print('+++++++++++++++++++++++++');
+    print('Email: ${bloc.email}');
+    print('Password: ${bloc.password}');
+    print('+++++++++++++++++++++++++');
+    Navigator.pushReplacementNamed(context, 'home');
   }
 }
