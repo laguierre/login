@@ -92,7 +92,7 @@ class LoginPage extends StatelessWidget {
                   'Sign In',
                   style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 55.0),
+                const SizedBox(height: 50.0),
                 _email(bloc),
                 SizedBox(height: 30.0),
                 _pass(bloc),
@@ -117,13 +117,14 @@ class LoginPage extends StatelessWidget {
               child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
-                    hintText: 'example@email.com',
-                    labelText: 'Email',
-                    counterText: snapshot.data,
-                    errorText:
-                        snapshot.hasData ? null : snapshot.error.toString(),
-                  ),
+                      icon:
+                          Icon(Icons.alternate_email, color: Colors.deepPurple),
+                      hintText: 'example@email.com',
+                      labelText: 'Email',
+                      counterText: snapshot.data,
+                      errorText: snapshot.error.toString() == 'null'
+                          ? null
+                          : snapshot.error.toString()),
                   onChanged: (value) {
                     bloc.changeEmail(value);
                   }));
@@ -143,8 +144,9 @@ class LoginPage extends StatelessWidget {
                   icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
                   labelText: 'Password',
                   counterText: snapshot.data,
-                  errorText:
-                      snapshot.hasData ? null : snapshot.error.toString(),
+                  errorText: snapshot.error.toString() == 'null'
+                      ? null
+                      : snapshot.error.toString(),
                 ),
                 onChanged: (value) {
                   bloc.changePassword(value);
@@ -159,8 +161,21 @@ class LoginPage extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return ElevatedButton(
             style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.deepPurple),
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.5);
+                  else if (states.contains(MaterialState.disabled))
+                    return Colors.grey;
+                  return Colors.deepPurple; // Use the component's default.
+                },
+              ),
+
+              //MaterialStateProperty.resolveWith<Color>(Colors.deepPurple)
+
               //shape: MaterialStateProperty.
             ),
             child: Container(
