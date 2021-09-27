@@ -17,10 +17,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Form Validation',
         theme: ThemeData(primaryColor: Colors.deepPurple),
-        initialRoute: 'login',
+        initialRoute: 'home',
         routes: {
           'login': (BuildContext context) => const LoginPage(),
-          'home': (BuildContext context) => const HomePage(),
+          'home': (BuildContext context) => HomePage(),
           'product': (BuildContext context) => ProductPage(),
 
         },

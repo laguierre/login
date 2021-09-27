@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login/scr/models/product_model.dart';
+import 'package:login/scr/providers/product_provider.dart';
 import 'package:login/scr/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
@@ -12,10 +13,18 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   @override
   final formKey = GlobalKey<FormState>();
+  final productProvider = ProductProvider();
   ProductModel product = ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
 
   Widget build(BuildContext context) {
+    final ProductModel prodData =
+        ModalRoute.of(context)!.settings.arguments as ProductModel;
+
+    /*if (prodData != null) {
+      product = prodData;
+    }*/
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
@@ -106,12 +115,22 @@ class _ProductPageState extends State<ProductPage> {
       print(product.title);
       print(product.value.toString());
       print(product.available);
+
+      if (product.id == null) {
+        productProvider.productCreate(product);
+      } else {
+        productProvider.productEdit(product);
+      }
     }
   }
 
   Widget _available() {
-    return SwitchListTile(value: product.available, activeColor: Colors.deepPurple, title: Text('available'), onChanged: (bool value) => setState(() {
-      product.available = value;
-    }));
+    return SwitchListTile(
+        value: product.available,
+        activeColor: Colors.deepPurple,
+        title: Text('available'),
+        onChanged: (bool value) => setState(() {
+              product.available = value;
+            }));
   }
 }
