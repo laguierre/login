@@ -11,21 +11,24 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  @override
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final productProvider = ProductProvider();
-  ProductModel product = ProductModel(
+  bool _saving = false;
+  ProductModel product = new ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
 
+  @override
   Widget build(BuildContext context) {
-    final ProductModel prodData =
-        ModalRoute.of(context)!.settings.arguments as ProductModel;
+    final ProductModel? prodData =
+        ModalRoute.of(context)?.settings.arguments as ProductModel?;
 
-    /*if (prodData != null) {
+    if (prodData != null) {
       product = prodData;
-    }*/
+    }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         title: Text('Product'),
@@ -91,7 +94,7 @@ class _ProductPageState extends State<ProductPage> {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed))
+            if (states.contains(MaterialState.pressed) && _saving)
               return Theme.of(context).colorScheme.primary.withOpacity(0.5);
             else if (states.contains(MaterialState.disabled))
               return Colors.grey;
@@ -101,7 +104,7 @@ class _ProductPageState extends State<ProductPage> {
       ),
       icon: Icon(Icons.save),
       label: const Text('Price'),
-      onPressed: _submit,
+      onPressed: (_saving) ? null : _submit,
     );
   }
 
@@ -111,6 +114,7 @@ class _ProductPageState extends State<ProductPage> {
     }
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      _saving = true;
       print('Valid Product');
       print(product.title);
       print(product.value.toString());
@@ -121,6 +125,8 @@ class _ProductPageState extends State<ProductPage> {
       } else {
         productProvider.productEdit(product);
       }
+      shownSnackbar(context, 'Saved!');
+      Navigator.pop(context);
     }
   }
 
@@ -132,5 +138,12 @@ class _ProductPageState extends State<ProductPage> {
         onChanged: (bool value) => setState(() {
               product.available = value;
             }));
+  }
+
+  void shownSnackbar(BuildContext context, String msj) {
+    _saving = false;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msj), duration: Duration(milliseconds: 1500)),
+    );
   }
 }
