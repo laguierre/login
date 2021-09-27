@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login/scr/pages/product_page.dart';
 
 import 'scr/bloc/provider.dart';
 import 'scr/pages/login_page.dart';
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
         routes: {
           'login': (BuildContext context) => const LoginPage(),
           'home': (BuildContext context) => const HomePage(),
+          'product': (BuildContext context) => ProductPage(),
+
         },
       ),
     );

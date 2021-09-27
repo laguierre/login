@@ -8,11 +8,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
     return SafeArea(
-        child: Scaffold(
+      child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.deepPurple,
           title: Text('Home Page'),
         ),
-        body: Center(
+        body: /*Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -21,8 +22,17 @@ class HomePage extends StatelessWidget {
               Divider(),
               Text('Password: ${bloc.password}'),
             ],
-        ),
+        ),*/
+            Container(),
+        floatingActionButton: _fab(context),
       ),
-    ));
+    );
+  }
+
+  _fab(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Colors.deepPurple,
+        child: const Icon(Icons.add),
+        onPressed: () => Navigator.pushNamed(context, 'product'));
   }
 }

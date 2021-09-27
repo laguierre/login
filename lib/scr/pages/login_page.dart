@@ -173,10 +173,6 @@ class LoginPage extends StatelessWidget {
                   return Colors.deepPurple; // Use the component's default.
                 },
               ),
-
-              //MaterialStateProperty.resolveWith<Color>(Colors.deepPurple)
-
-              //shape: MaterialStateProperty.
             ),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15.0),

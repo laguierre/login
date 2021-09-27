@@ -1,0 +1,117 @@
+import 'package:flutter/material.dart';
+import 'package:login/scr/models/product_model.dart';
+import 'package:login/scr/utils/utils.dart' as utils;
+
+class ProductPage extends StatefulWidget {
+  const ProductPage({Key? key}) : super(key: key);
+
+  @override
+  _ProductPageState createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  @override
+  final formKey = GlobalKey<FormState>();
+  ProductModel product = ProductModel(
+      title: '', value: 0.0, available: false, id: '', photoUrl: '');
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        title: Text('Product'),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.photo_size_select_actual), onPressed: () {}),
+          IconButton(icon: Icon(Icons.camera_alt), onPressed: () {}),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(15.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                _name(),
+                _price(),
+                _available(),
+                _btn(context),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _name() {
+    return TextFormField(
+      initialValue: product.title,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: const InputDecoration(labelText: 'Product'),
+      validator: (value) {
+        if (value!.length < 3)
+          return 'Insert a valid name';
+        else
+          null;
+      },
+      onSaved: (value) => product.title = value!,
+    );
+  }
+
+  Widget _price() {
+    return TextFormField(
+      initialValue: product.value.toString(),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: const InputDecoration(
+        labelText: 'Price',
+      ),
+      validator: (value) {
+        if (utils.isNumeric(value!)) {
+          return null;
+        } else
+          return 'Only numbers.';
+      },
+      onSaved: (value) => product.value = double.parse(value!),
+    );
+  }
+
+  Widget _btn(BuildContext context) {
+    return ElevatedButton.icon(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed))
+              return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+            else if (states.contains(MaterialState.disabled))
+              return Colors.grey;
+            return Colors.deepPurple; // Use the component's default.
+          },
+        ),
+      ),
+      icon: Icon(Icons.save),
+      label: const Text('Price'),
+      onPressed: _submit,
+    );
+  }
+
+  void _submit() {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      print('Valid Product');
+      print(product.title);
+      print(product.value.toString());
+      print(product.available);
+    }
+  }
+
+  Widget _available() {
+    return SwitchListTile(value: product.available, activeColor: Colors.deepPurple, title: Text('available'), onChanged: (bool value) => setState(() {
+      product.available = value;
+    }));
+  }
+}
