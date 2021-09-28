@@ -34,8 +34,8 @@ class _ProductPageState extends State<ProductPage> {
         title: Text('Product'),
         actions: [
           IconButton(
-              icon: Icon(Icons.photo_size_select_actual), onPressed: () {}),
-          IconButton(icon: Icon(Icons.camera_alt), onPressed: () {}),
+              icon: const Icon(Icons.photo_size_select_actual), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.camera_alt), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -118,7 +118,7 @@ class _ProductPageState extends State<ProductPage> {
         'Valid Product: ${product.title}, ${product.value.toString()} + ${product.available}');
 
 
-    productProvider.productCreate(product);
+    //productProvider.productCreate(product);
 
     /*if (product.id == null) {
       print('Crear');
@@ -126,9 +126,13 @@ class _ProductPageState extends State<ProductPage> {
     } else {
       print('append');
       productProvider.productEdit(product);
-    }
+    }*/
+
+    productProvider.productCreate(product);
+
+
     shownSnackbar(context, 'Saved!');
-    Navigator.pop(context);*/
+    Navigator.pop(context);
   }
 
   Widget _available() {
