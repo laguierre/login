@@ -20,12 +20,12 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ProductModel? prodData =
+    /*final ProductModel? prodData =
         ModalRoute.of(context)?.settings.arguments as ProductModel?;
 
     if (prodData != null) {
       product = prodData;
-    }
+    }*/
 
     return Scaffold(
       key: scaffoldKey,
@@ -91,43 +91,44 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _btn(BuildContext context) {
     return ElevatedButton.icon(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed) && _saving)
-              return Theme.of(context).colorScheme.primary.withOpacity(0.5);
-            else if (states.contains(MaterialState.disabled))
-              return Colors.grey;
-            return Colors.deepPurple; // Use the component's default.
-          },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed))
+                return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+              else if (states.contains(MaterialState.disabled))
+                return Colors.grey;
+              return Colors.deepPurple; // Use the component's default.
+            },
+          ),
         ),
-      ),
-      icon: Icon(Icons.save),
-      label: const Text('Price'),
-      onPressed: (_saving) ? null : _submit,
-    );
+        icon: Icon(Icons.save),
+        label: const Text('Price'),
+        onPressed: _submit //(_saving) ? null : _submit,
+        );
   }
 
-  void _submit() {
+  void _submit() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-      _saving = true;
-      print('Valid Product');
-      print(product.title);
-      print(product.value.toString());
-      print(product.available);
+    formKey.currentState!.save();
+    //_saving = true;
+    print(
+        'Valid Product: ${product.title}, ${product.value.toString()} + ${product.available}');
 
-      if (product.id == null) {
-        productProvider.productCreate(product);
-      } else {
-        productProvider.productEdit(product);
-      }
-      shownSnackbar(context, 'Saved!');
-      Navigator.pop(context);
+
+    productProvider.productCreate(product);
+
+    /*if (product.id == null) {
+      print('Crear');
+      productProvider.productCreate(product);
+    } else {
+      print('append');
+      productProvider.productEdit(product);
     }
+    shownSnackbar(context, 'Saved!');
+    Navigator.pop(context);*/
   }
 
   Widget _available() {

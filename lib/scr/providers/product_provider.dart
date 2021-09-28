@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/scr/models/product_model.dart';
 
@@ -17,25 +15,20 @@ class ProductProvider {
     return true;
   }
 
-
-
-
   Future<bool> productEdit(ProductModel product) async {
     final url = '$_url/product/${product.id}.json';
     final resp =
-    await http.put(Uri.parse(url), body: productModelToJson(product));
+        await http.put(Uri.parse(url), body: productModelToJson(product));
     final decodedData = json.decode(resp.body);
     print(decodedData);
     return true;
   }
 
-
-
   Future<List<ProductModel>> loadProduct() async {
     final url = '$_url/product.json';
     final resp = await http.get(Uri.parse(url));
+    final List<ProductModel> product = [];
     final Map<String, dynamic> decodedData = json.decode(resp.body);
-    List<ProductModel> product = [];
 
     if (decodedData == null) return [];
     decodedData.forEach((id, prod) {
@@ -43,11 +36,10 @@ class ProductProvider {
       prodTemp.id = id;
       product.add(prodTemp);
     });
-    print(product);
     return product;
   }
 
-  Future<int> deleteProduct(String id) async{
+  Future<int> deleteProduct(String id) async {
     final url = '$_url/product/$id.json';
     final resp = await http.delete(Uri.parse(url));
     print(json.decode(resp.body));

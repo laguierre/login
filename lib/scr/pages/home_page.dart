@@ -5,7 +5,7 @@ import 'package:login/scr/providers/product_provider.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
-  final productProvider = new ProductProvider();
+  final productProvider = ProductProvider();
 
   @override
   Widget build(BuildContext context) {
