@@ -20,12 +20,12 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    /*final ProductModel? prodData =
+    final ProductModel? prodData =
         ModalRoute.of(context)?.settings.arguments as ProductModel?;
 
     if (prodData != null) {
       product = prodData;
-    }*/
+    }
 
     return Scaffold(
       key: scaffoldKey,
