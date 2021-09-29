@@ -4,7 +4,6 @@ import 'package:login/scr/models/product_model.dart';
 import 'package:login/scr/providers/product_provider.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
   final productProvider = ProductProvider();
   static String noImagePNG = 'lib/assets/images/no-image.png';
   static String noImageLoading = 'lib/assets/images/jar-loading.gif';

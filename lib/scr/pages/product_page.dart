@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:login/scr/models/product_model.dart';
 import 'package:login/scr/providers/product_provider.dart';
 import 'package:login/scr/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key}) : super(key: key);
 
   @override
   _ProductPageState createState() => _ProductPageState();

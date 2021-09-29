@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:login/scr/bloc/provider.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
