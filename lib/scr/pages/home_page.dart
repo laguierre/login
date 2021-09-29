@@ -4,13 +4,13 @@ import 'package:login/scr/models/product_model.dart';
 import 'package:login/scr/providers/product_provider.dart';
 
 class HomePage extends StatelessWidget {
-  final productProvider = ProductProvider();
+  final productProvider = new ProductProvider();
   static String noImagePNG = 'lib/assets/images/no-image.png';
   static String noImageLoading = 'lib/assets/images/jar-loading.gif';
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    //final bloc = Provider.of(context);
 
     return SafeArea(
       child: Scaffold(
@@ -49,26 +49,26 @@ class HomePage extends StatelessWidget {
 
   Widget _createItem(BuildContext context, ProductModel product) {
     return Dismissible(
+        key: UniqueKey(),
         background: Container(
           color: Colors.red,
         ),
-        key: UniqueKey(),
         onDismissed: (direction) {
           print(product.id);
           productProvider.deleteProduct(product.id);
         },
         child: Card(
           child: Column(
-            children: <Widget>
-            [
-              /*product.photoUrl == null
-                  : Image(image: AssetImage(noImagePNG))
-                  ? FadeInImage(
-                image: NetworkImage(product.photoUrl),
-                placeholder: AssetImage(noImageLoading),
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,),*/
+            children: <Widget>[
+              (product.photoUrl == null)
+                  ? Image(image: AssetImage(noImagePNG))
+                  : FadeInImage(
+                      image: NetworkImage(product.photoUrl),
+                      placeholder: AssetImage(noImageLoading),
+                      height: 300.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
               ListTile(
                 title: Text('${product.title} - ${product.value}'),
                 subtitle: Text(product.id),
@@ -76,15 +76,7 @@ class HomePage extends StatelessWidget {
                     Navigator.pushNamed(context, 'product', arguments: product),
               )
             ],
-          )
-          ,
-        )
-    );
+          ),
+        ));
   }
-} /*
-ListTile(
-          title: Text('${product.title} - ${product.value}'),
-          subtitle: Text(product.id),
-          onTap: () => Navigator.pushNamed(context, 'product', arguments: product),
-        )*/
-
+}

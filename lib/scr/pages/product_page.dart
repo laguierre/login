@@ -6,7 +6,6 @@ import 'package:login/scr/providers/product_provider.dart';
 import 'package:login/scr/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
-
   @override
   _ProductPageState createState() => _ProductPageState();
 }
@@ -14,11 +13,11 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final productProvider = ProductProvider();
-  bool _saving = false;
-  late File foto;
+  final productProvider = new ProductProvider();
   ProductModel product = new ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
+  bool _saving = false;
+  late XFile foto;
 
   static String noImagePNG = 'lib/assets/images/no-image.png';
   static String noImageLoading = 'lib/assets/images/jar-loading.gif';
@@ -98,6 +97,15 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _btn(BuildContext context) {
+    /*return RaisedButton.icon(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      color: Colors.deepPurple,
+      textColor: Colors.white,
+      label: Text('Save'),
+      icon: Icon(Icons.save),
+      onPressed: (_saving) ? null : _submit,
+    );*/
+
     return ElevatedButton.icon(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -112,26 +120,28 @@ class _ProductPageState extends State<ProductPage> {
         ),
         icon: Icon(Icons.save),
         label: const Text('Save'),
-        onPressed: _submit() //(_saving) ? null : _submit,
+        onPressed: _submit //(_saving) ? null : _submit,
         );
   }
 
-  _submit() async {
+  void _submit() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
     formKey.currentState!.save();
-    //_saving = true;
-    print(
-        'Valid Product: ${product.title}, ${product.value.toString()} + ${product.available}');
+    setState(() {
+      _saving = true;
+    });
 
-    //productProvider.productCreate(product);
+    print(
+        '**** Valid Product: ${product.title}, ${product.value.toString()}, ${product.available} ****');
 
     if (foto != null) {
-      product.photoUrl = (await productProvider.loadImage(foto))!;
+      print('No es nulo');
+      product.photoUrl = (await productProvider.uploadImage(foto))!;
     }
 
-    if (product.id == null) {
+    if (product.id == '') {
       print('Crear');
       productProvider.productCreate(product);
     } else {
@@ -146,8 +156,8 @@ class _ProductPageState extends State<ProductPage> {
   Widget _available() {
     return SwitchListTile(
         value: product.available,
+        title: Text('Available'),
         activeColor: Colors.deepPurple,
-        title: Text('available'),
         onChanged: (bool value) => setState(() {
               product.available = value;
             }));
@@ -161,15 +171,15 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _showPhoto() {
-    if (product.photoUrl != null)
+    if (product.photoUrl != '') {
       return FadeInImage(
-        height: 300.0,
-        fit: BoxFit.contain,
-          placeholder: AssetImage(noImageLoading),
-          image: NetworkImage(product.photoUrl));
-    else {
+          image: NetworkImage(product.photoUrl),
+          height: 300.0,
+          fit: BoxFit.contain,
+          placeholder: AssetImage(noImageLoading));
+    } else {
       return Image(
-        image: AssetImage(foto.path ?? noImagePNG),
+        image: AssetImage(foto?.path?? noImagePNG),
         height: 300.0,
         fit: BoxFit.cover,
       );
@@ -182,12 +192,14 @@ class _ProductPageState extends State<ProductPage> {
 
   void _takePhotos() async {
     _processPhoto(ImageSource.camera);
+    print('El nombre de la fotos: ${foto.path}');
   }
 
   _processPhoto(ImageSource origin) async {
-    foto = (await ImagePicker.platform.pickImage(source: origin)) as File;
-    if (foto != null) {
-      product.photoUrl = null.toString();
+    ImagePicker _picker = ImagePicker();
+    foto = (await _picker.pickImage(source: origin))!;
+    if (foto == null) {
+      product.photoUrl = '';
     }
     setState(() {});
   }

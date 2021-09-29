@@ -6,6 +6,12 @@ ProductModel productModelFromJson(String str) =>
 String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
+  String id;
+  String title = '';
+  double value = 0.0;
+  bool available = true;
+  String photoUrl;
+
   ProductModel({
     required this.id,
     required this.title,
@@ -13,12 +19,6 @@ class ProductModel {
     required this.available,
     required this.photoUrl,
   });
-
-  String id;
-  String title = '';
-  double value = 0.0;
-  bool available = true;
-  String photoUrl;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
