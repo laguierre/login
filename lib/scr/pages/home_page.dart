@@ -6,6 +6,8 @@ import 'package:login/scr/providers/product_provider.dart';
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
   final productProvider = ProductProvider();
+  static String noImagePNG = 'lib/assets/images/no-image.png';
+  static String noImageLoading = 'lib/assets/images/jar-loading.gif';
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +54,38 @@ class HomePage extends StatelessWidget {
           color: Colors.red,
         ),
         key: UniqueKey(),
-        onDismissed: (direction){
+        onDismissed: (direction) {
+          print(product.id);
           productProvider.deleteProduct(product.id);
         },
-        child: ListTile(
+        child: Card(
+          child: Column(
+            children: <Widget>
+            [
+              /*product.photoUrl == null
+                  : Image(image: AssetImage(noImagePNG))
+                  ? FadeInImage(
+                image: NetworkImage(product.photoUrl),
+                placeholder: AssetImage(noImageLoading),
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.cover,),*/
+              ListTile(
+                title: Text('${product.title} - ${product.value}'),
+                subtitle: Text(product.id),
+                onTap: () =>
+                    Navigator.pushNamed(context, 'product', arguments: product),
+              )
+            ],
+          )
+          ,
+        )
+    );
+  }
+} /*
+ListTile(
           title: Text('${product.title} - ${product.value}'),
           subtitle: Text(product.id),
           onTap: () => Navigator.pushNamed(context, 'product', arguments: product),
-        ));
-  }
-}
+        )*/
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:login/scr/models/product_model.dart';
 import 'package:login/scr/providers/product_provider.dart';
 import 'package:login/scr/utils/utils.dart' as utils;
@@ -15,8 +18,12 @@ class _ProductPageState extends State<ProductPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final productProvider = ProductProvider();
   bool _saving = false;
+  late File foto;
   ProductModel product = new ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
+
+  static String noImagePNG = 'lib/assets/images/no-image.png';
+  static String noImageLoading = 'lib/assets/images/jar-loading.gif';
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +41,10 @@ class _ProductPageState extends State<ProductPage> {
         title: Text('Product'),
         actions: [
           IconButton(
-              icon: const Icon(Icons.photo_size_select_actual), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.camera_alt), onPressed: () {}),
+              icon: const Icon(Icons.photo_size_select_actual),
+              onPressed: _photoSelect),
+          IconButton(
+              icon: const Icon(Icons.camera_alt), onPressed: _takePhotos),
         ],
       ),
       body: SingleChildScrollView(
@@ -45,6 +54,7 @@ class _ProductPageState extends State<ProductPage> {
             key: formKey,
             child: Column(
               children: [
+                _showPhoto(),
                 _name(),
                 _price(),
                 _available(),
@@ -103,12 +113,12 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ),
         icon: Icon(Icons.save),
-        label: const Text('Price'),
-        onPressed: _submit //(_saving) ? null : _submit,
+        label: const Text('Save'),
+        onPressed: _submit() //(_saving) ? null : _submit,
         );
   }
 
-  void _submit() async {
+  _submit() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -117,19 +127,19 @@ class _ProductPageState extends State<ProductPage> {
     print(
         'Valid Product: ${product.title}, ${product.value.toString()} + ${product.available}');
 
-
     //productProvider.productCreate(product);
 
-    /*if (product.id == null) {
+    if (foto != null) {
+      product.photoUrl = (await productProvider.loadImage(foto))!;
+    }
+
+    if (product.id == null) {
       print('Crear');
       productProvider.productCreate(product);
     } else {
       print('append');
       productProvider.productEdit(product);
-    }*/
-
-    productProvider.productCreate(product);
-
+    }
 
     shownSnackbar(context, 'Saved!');
     Navigator.pop(context);
@@ -150,5 +160,37 @@ class _ProductPageState extends State<ProductPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msj), duration: Duration(milliseconds: 1500)),
     );
+  }
+
+  Widget _showPhoto() {
+    if (product.photoUrl != null)
+      return FadeInImage(
+        height: 300.0,
+        fit: BoxFit.contain,
+          placeholder: AssetImage(noImageLoading),
+          image: NetworkImage(product.photoUrl));
+    else {
+      return Image(
+        image: AssetImage(foto.path ?? noImagePNG),
+        height: 300.0,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  void _photoSelect() async {
+    _processPhoto(ImageSource.gallery);
+  }
+
+  void _takePhotos() async {
+    _processPhoto(ImageSource.camera);
+  }
+
+  _processPhoto(ImageSource origin) async {
+    foto = (await ImagePicker.platform.pickImage(source: origin)) as File;
+    if (foto != null) {
+      product.photoUrl = null.toString();
+    }
+    setState(() {});
   }
 }
