@@ -17,7 +17,7 @@ class _ProductPageState extends State<ProductPage> {
   ProductModel product = new ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
   bool _saving = false;
-  late XFile foto;
+  late XFile foto = XFile('');
 
   static String noImagePNG = 'lib/assets/images/no-image.png';
   static String noImageLoading = 'lib/assets/images/jar-loading.gif';
@@ -120,7 +120,7 @@ class _ProductPageState extends State<ProductPage> {
         ),
         icon: Icon(Icons.save),
         label: const Text('Save'),
-        onPressed: _submit //(_saving) ? null : _submit,
+        onPressed: (_saving) ? null : _submit,
         );
   }
 
@@ -134,13 +134,12 @@ class _ProductPageState extends State<ProductPage> {
     });
 
     print(
-        '**** Valid Product: ${product.title}, ${product.value.toString()}, ${product.available} ****');
+        '**** Valid Product: ${product.title}, ${product.value.toString()}, ${product.available}, ${product.photoUrl} ****');
 
-    if (foto != null) {
-      print('No es nulo');
+    print('SUBMIT: ${foto.path}');
+    if (foto.path.isNotEmpty) {
       product.photoUrl = (await productProvider.uploadImage(foto))!;
     }
-
     if (product.id == '') {
       print('Crear');
       productProvider.productCreate(product);
@@ -148,7 +147,6 @@ class _ProductPageState extends State<ProductPage> {
       print('append');
       productProvider.productEdit(product);
     }
-
     shownSnackbar(context, 'Saved!');
     Navigator.pop(context);
   }
@@ -177,13 +175,22 @@ class _ProductPageState extends State<ProductPage> {
           height: 300.0,
           fit: BoxFit.contain,
           placeholder: AssetImage(noImageLoading));
+    } else if (foto.path.isNotEmpty) {
+      return FadeInImage(
+          placeholder: AssetImage(noImageLoading),
+          image: FileImage(File(foto.path)));
     } else {
-      return Image(
-        image: AssetImage(foto?.path?? noImagePNG),
+      return Image.asset(noImagePNG);
+    }
+
+    /*foto.path.isNotEmpty
+              ? FileImage(File(foto.path))
+              : AssetImage(noImageLoading));*/
+    /*return Image.asset(
+        foto.path.isNotEmpty ? foto.path : noImagePNG,
         height: 300.0,
         fit: BoxFit.cover,
-      );
-    }
+      );*/
   }
 
   void _photoSelect() async {
@@ -201,6 +208,7 @@ class _ProductPageState extends State<ProductPage> {
     if (foto == null) {
       product.photoUrl = '';
     }
+    print('Ruta de la foto: ${foto.path}');
     setState(() {});
   }
 }
