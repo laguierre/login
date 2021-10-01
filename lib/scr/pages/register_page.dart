@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login/scr/bloc/provider.dart';
+import 'package:login/scr/providers/user_provider.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
+
+  final userProvider = UserProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +91,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               children: [
                 const Text(
-                  'Sign In',
+                  'Create Account',
                   style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 50.0),
@@ -100,7 +103,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          TextButton(child: Text('Create a new acount'), onPressed: ()=>Navigator.pushReplacementNamed(context, 'register'), ),
+          TextButton(child: Text('Are you register? Login'), onPressed: ()=>Navigator.pushReplacementNamed(context, 'login'), ),
           SizedBox(height: 100.0),
         ],
       ),
@@ -180,18 +183,15 @@ class LoginPage extends StatelessWidget {
             ),
             onPressed: snapshot.hasData
                 ? () {
-                    _login(bloc, context);
+                    _register(bloc, context);
                   }
                 : null,
           );
         });
   }
 
-  _login(LoginBloc bloc, BuildContext context) {
-    print('+++++++++++++++++++++++++');
-    print('Email: ${bloc.email}');
-    print('Password: ${bloc.password}');
-    print('+++++++++++++++++++++++++');
-    Navigator.pushReplacementNamed(context, 'home');
+  _register(LoginBloc bloc, BuildContext context) {
+   userProvider.newUser(bloc.email, bloc.password);
+    //Navigator.pushReplacementNamed(context, 'home');
   }
 }
