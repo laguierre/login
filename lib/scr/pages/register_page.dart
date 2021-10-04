@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login/scr/bloc/provider.dart';
 import 'package:login/scr/providers/user_provider.dart';
+import 'package:login/scr/utils/utils.dart';
 
 class RegisterPage extends StatelessWidget {
-
   final userProvider = UserProvider();
 
   @override
@@ -103,7 +103,10 @@ class RegisterPage extends StatelessWidget {
               ],
             ),
           ),
-          TextButton(child: Text('Are you register? Login'), onPressed: ()=>Navigator.pushReplacementNamed(context, 'login'), ),
+          TextButton(
+            child: Text('Are you register? Login'),
+            onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
+          ),
           SizedBox(height: 100.0),
         ],
       ),
@@ -190,8 +193,13 @@ class RegisterPage extends StatelessWidget {
         });
   }
 
-  _register(LoginBloc bloc, BuildContext context) {
-   userProvider.newUser(bloc.email, bloc.password);
-    //Navigator.pushReplacementNamed(context, 'home');
+  _register(LoginBloc bloc, BuildContext context) async {
+    final info = await userProvider.newUser(bloc.email, bloc.password);
+
+    if (info['ok']) {
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      showAlert(context, info['msj']);
+    }
   }
 }

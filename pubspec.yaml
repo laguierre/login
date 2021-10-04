@@ -37,6 +37,7 @@ dependencies:
   rxdart: ^0.27.2
   image_picker: ^0.8.4+2
   mime_type: ^1.0.0
+  shared_preferences: ^2.0.8
   http:
 
 dev_dependencies:

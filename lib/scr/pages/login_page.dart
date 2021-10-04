@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login/scr/bloc/provider.dart';
+import 'package:login/scr/providers/user_provider.dart';
+import 'package:login/scr/utils/utils.dart';
 
 class LoginPage extends StatelessWidget {
+  final userProvider = UserProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +103,11 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          TextButton(child: Text('Create a new acount'), onPressed: ()=>Navigator.pushReplacementNamed(context, 'register'), ),
+          TextButton(
+            child: Text('Create a new acount'),
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, 'register'),
+          ),
           SizedBox(height: 100.0),
         ],
       ),
@@ -187,11 +194,13 @@ class LoginPage extends StatelessWidget {
         });
   }
 
-  _login(LoginBloc bloc, BuildContext context) {
-    print('+++++++++++++++++++++++++');
-    print('Email: ${bloc.email}');
-    print('Password: ${bloc.password}');
-    print('+++++++++++++++++++++++++');
-    Navigator.pushReplacementNamed(context, 'home');
+  _login(LoginBloc bloc, BuildContext context) async {
+    Map info = await userProvider.login(bloc.email, bloc.password);
+    print("**********INFO: ${info}");
+    if (info['ok']) {
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      showAlert(context, info['msj']);
+    }
   }
 }
