@@ -196,7 +196,7 @@ class LoginPage extends StatelessWidget {
 
   _login(LoginBloc bloc, BuildContext context) async {
     Map info = await userProvider.login(bloc.email, bloc.password);
-    print("**********INFO: ${info}");
+    //print("**********INFO: ${info}");
     if (info['ok']) {
       Navigator.pushReplacementNamed(context, 'home');
     } else {

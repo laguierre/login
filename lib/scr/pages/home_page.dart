@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:login/scr/bloc/provider.dart';
 import 'package:login/scr/models/product_model.dart';
 import 'package:login/scr/providers/product_provider.dart';
 

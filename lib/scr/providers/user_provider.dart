@@ -6,7 +6,7 @@ import 'package:login/scr/user_preferences/user_preferences.dart';
 
 class UserProvider {
   final String _firebaseToken = 'AIzaSyCg8LuhQvn_CFZlNDV0ySK420ufF5DuY-U';
-  final _prefs = new UserPreferences();
+  final _prefs = UserPreferences();
 
   login(String email, String password) async {
     final authData = {
@@ -19,7 +19,9 @@ class UserProvider {
             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$_firebaseToken'),
         body: json.encode(authData));
     Map<String, dynamic> decodeResp = json.decode(resp.body);
+
     //print('Decode Resp: ${decodeResp}');
+
     if (decodeResp.containsKey('idToken')) {
       print('ID Token: ${decodeResp['idToken']}');
       _prefs.token = decodeResp['idToken'];
