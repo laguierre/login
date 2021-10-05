@@ -12,7 +12,7 @@ class UserProvider {
     final authData = {
       "email": email,
       "password": password,
-      "returnSecureToke": true
+      "returnSecureToken": true
     };
     final resp = await http.post(
         Uri.parse(
