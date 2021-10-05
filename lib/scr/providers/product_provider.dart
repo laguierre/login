@@ -38,9 +38,9 @@ class ProductProvider {
     //final url = '$_url/product.json?auth=${_prefs.token}';
     //final url = '$_url/product.json?auth=eyJhbGciOiJSUzI1NiIsImtpZCI6IjM1MDM0MmIwMjU1MDAyYWI3NWUwNTM0YzU4MmVjYzY2Y2YwZTE3ZDIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmx1dHRlci12YXJpb3MtYjg4NGEiLCJhdWQiOiJmbHV0dGVyLXZhcmlvcy1iODg0YSIsImF1dGhfdGltZSI6MTYzMzMxMTU1NiwidXNlcl9pZCI6IjNHTkZHSU9GZ0JVVDhCYlY1bjB2UXN1Q3d0RTMiLCJzdWIiOiIzR05GR0lPRmdCVVQ4QmJWNW4wdlFzdUN3dEUzIiwiaWF0IjoxNjMzMzExNTU2LCJleHAiOjE2MzMzMTUxNTYsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0ZXN0QHRlc3QuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.tchtWJOGKuoansQtxcObrRmmCTzPmtad15QMiJie2HC-aWvAY5o9w6sH9ZJDNsbZ-QXY2RPNiSlXUxTrK18Sst3XTbcfLMj8WtjWcsHQF0EdgWEz0GY9UapW3aFzcuCxQrEyAIyf9IbEAT_IAbIpyjBv618ZDbfEJxkjrAi9QnBKnJizrfmTr2A47gwPcJW4hsoNRmk6_rAqx7uj0cjT2ywi_QjlkQvldnJsEmj9dmZyMuh46Lsqc27HC4OBdHA-yB1dZl40TZmXGO4DqaX53NhzyQ7HfzHmvJLdxVTbWSBPpdHuqs-fdb3E09new0ROrI9FdcYnDWGYB2Fv9sCOXg';
     ///
-    final url = Uri.parse('$_url/product/.json?auth=${_prefs.token}');
-    final resp = await http.post(url);
-    print('URL:  ' + url.toString());
+    final url = Uri.tryParse('$_url/product.json?auth=${_prefs.token}');
+    final resp = await http.get(url!);
+    print('URL1:  ${url}, ${resp.body}');
 
     final Map<String, dynamic> decodedData = json.decode(resp.body);
     final List<ProductModel> product = [];
