@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:login/scr/bloc/product_bloc.dart';
+import 'package:login/scr/bloc/provider.dart';
 import 'package:login/scr/models/product_model.dart';
-import 'package:login/scr/providers/product_provider.dart';
 
 class HomePage extends StatelessWidget {
-  final productProvider = new ProductProvider();
   static String noImagePNG = 'lib/assets/images/no-image.png';
   static String noImageLoading = 'lib/assets/images/jar-loading.gif';
 
   @override
   Widget build(BuildContext context) {
-    //final bloc = Provider.of(context);
+    final productBloc = Provider.productBloc(context);
+    productBloc.loadProduct();
 
     return SafeArea(
       child: Scaffold(
@@ -17,7 +18,7 @@ class HomePage extends StatelessWidget {
           backgroundColor: Colors.deepPurple,
           title: Text('Home Page'),
         ),
-        body: _listProduct(),
+        body: _listProduct(productBloc),
         floatingActionButton: _fab(context),
       ),
     );
@@ -30,23 +31,22 @@ class HomePage extends StatelessWidget {
         onPressed: () => Navigator.pushNamed(context, 'product'));
   }
 
-  Widget _listProduct() {
-    return FutureBuilder(
-        future: productProvider.loadProduct(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+  Widget _listProduct(ProductBloc productBloc) {
+    return StreamBuilder(
+        stream: productBloc.productsStream,
+        builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
           if (snapshot.hasData) {
             final product = snapshot.data;
             return ListView.builder(
                 itemCount: product!.length,
-                itemBuilder: (context, i) => _createItem(context, product[i]));
+                itemBuilder: (context, i) => _createItem(context, productBloc, product[i]));
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         });
   }
 
-  Widget _createItem(BuildContext context, ProductModel product) {
+  Widget _createItem(BuildContext context, ProductBloc productBloc, ProductModel product) {
     return Dismissible(
         key: UniqueKey(),
         background: Container(
@@ -54,7 +54,8 @@ class HomePage extends StatelessWidget {
         ),
         onDismissed: (direction) {
           print(product.id);
-          productProvider.deleteProduct(product.id);
+          //productProvider.deleteProduct(product.id);
+          productBloc.deleteProduct(product.id);
         },
         child: Card(
           child: Column(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:login/scr/bloc/product_bloc.dart';
+import 'package:login/scr/bloc/provider.dart';
 import 'package:login/scr/models/product_model.dart';
-import 'package:login/scr/providers/product_provider.dart';
 import 'package:login/scr/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final productProvider = new ProductProvider();
+  late ProductBloc productBloc;
   ProductModel product = new ProductModel(
       title: '', value: 0.0, available: false, id: '', photoUrl: '');
   bool _saving = false;
@@ -24,6 +25,7 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    productBloc = Provider.productBloc(context);
     final ProductModel? prodData =
         ModalRoute.of(context)?.settings.arguments as ProductModel?;
 
@@ -138,14 +140,14 @@ class _ProductPageState extends State<ProductPage> {
 
     print('SUBMIT: ${foto.path}');
     if (foto.path.isNotEmpty) {
-      product.photoUrl = (await productProvider.uploadImage(foto))!;
+      product.photoUrl = (await productBloc.uploadPhoto(foto))!;
     }
     if (product.id == '') {
       print('Crear');
-      productProvider.productCreate(product);
+      productBloc.addProduct(product);
     } else {
       print('append');
-      productProvider.productEdit(product);
+      productBloc.editProduct(product);
     }
     shownSnackbar(context, 'Saved!');
     Navigator.pop(context);

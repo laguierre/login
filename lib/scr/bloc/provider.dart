@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:login/scr/bloc/product_bloc.dart';
 import 'login_bloc.dart';
 export 'login_bloc.dart';
 
 class Provider extends InheritedWidget {
+  final loginBloc = LoginBloc();
+  final _productBloc = ProductBloc();
+
   ///Con retención de datos
   /*static Provider _instance = Provider();
   factory Provider({Key? key, Widget? child})  {
@@ -16,7 +20,6 @@ class Provider extends InheritedWidget {
       : super(key: key, child: child!);*/
 
   ///Sin retención de datos///
-  final loginBloc = LoginBloc();
   Provider({Key? key, Widget? child}) : super(key: key, child: child!);
 
   @override
@@ -25,5 +28,11 @@ class Provider extends InheritedWidget {
   static LoginBloc of(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<Provider>() as Provider)
         .loginBloc;
+  }
+
+  ///productBloc != _productBloc
+  static ProductBloc productBloc(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<Provider>() as Provider)
+        ._productBloc;
   }
 }
