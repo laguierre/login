@@ -14,12 +14,12 @@ Login App using Firebase. Store the data using User Preferences.
 
 ## GIF
 <p align="center">
-<img src="https://github.com/laguierre/cuenta_dni_clone/blob/master/screenshots/intro.gif" height="700">
+<img src="https://github.com/laguierre/login/blob/master/screenshots/untitled.gif" height="700">
 </p>
 
 ## Screenshots
 <p align="center">
-<img src="https://github.com/laguierre/cuenta_dni_clone/blob/master/screenshots/Screenshot_1644953358.png" height="700">
-<img src="https://github.com/laguierre/cuenta_dni_clone/blob/master/screenshots/Screenshot_1644953381.png" height="700">
+<img src="https://github.com/laguierre/login/blob/master/screenshots/Screenshot_1645487008.png" height="700">
+<img src="https://github.com/laguierre/login/blob/master/screenshots/Screenshot_1645487038.png" height="700">
 </p>
 
